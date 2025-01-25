@@ -1,6 +1,7 @@
 const express = require("express");
 const router = express.Router();
 const { User } = require("../db");
+const { authMiddleware } =  require("../middleware");
 const {JWT_SECRET} =  require("../config");
 const z = require("zod");
 const jwt = require("jsonwebtoken");
@@ -84,7 +85,27 @@ router.use("/signin", async (req, res) => {
         })
     }
 
-    
+    const updateBody = z.object({
+        username: z.string().optional(),
+        password: z.string().optional(),
+    }) 
+
+router.put("/user", async (req, res)=>{
+    const {success} = updateBody.safeParse(req.body);
+    if(!success){
+        res.status(411).json({
+            msg: "Please enter the correct username/ password"
+        })
+    }
+
+   await User.updateOne({_id: req.userID}, req.body)
+
+    res.json({
+        msg:"Updated Succesfully"
+    })
+
+
+})
 })
 module.exports = {
     router

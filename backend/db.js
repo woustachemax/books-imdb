@@ -10,8 +10,31 @@ const userSchema = new mongoose.Schema(
    }
 );
 
-const User = mongoose.model("User", userSchema);
+const accountSchema =  new mongoose.Schema(
+  {
+      userID: {
+        type: mongoose.Schema.Types.ObjectId, 
+        ref: 'User',
+        required: true
+      },
+      Reviews: String,
+  }
 
+)
+
+const bookSchema = new mongoose.Schema(
+  {
+    title: String,
+    genre: String,
+    review: String,
+    rating: Number,
+  }
+)
+const User = mongoose.model("User", userSchema);
+const Account = mongoose.model("Account", accountSchema);
+const Book = mongoose.model("Book", bookSchema);
 module.exports = {
-    User
+    User,
+    Account,
+    Book
 }
